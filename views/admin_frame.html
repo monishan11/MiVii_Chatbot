@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="../css/frame.css">
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Leftmost panel -->
+        <div class="leftmost-panel">
+            <img src="/img/logo2.png" alt="Image Description" class="center-image">
+            <h1>Welcome to the MiVii Chat Bot</h1>
+            <p>Your AI assistant for hassle-free museum ticket booking! Plan your visit with ease.</p>
+        </div>
+
+        <!-- Left panel with iframe -->
+        <div class="left-panel">
+            <iframe id="myIframe"></iframe>
+        </div>
+
+        <!-- Right panel with navigation -->
+        <div class="right-panel">
+            <div class="logo-details">
+                <i class="bx"></i>
+                <span class="logo_name">Features</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#"><i class="bx bx-grid-alt"></i><span class="links_name">Manage Bookings</span></a></li>
+                <li><a href="/admin_museums"><i class="bx bx-box"></i><span class="links_name">Manage Museums</span></a></li>
+                <li><a href="#" class="active"><i class="bx bx-list-ul"></i><span class="links_name">Manage Users</span></a></li>
+                <li><a href="/admin_events"><i class="bx bx-pie-chart-alt-2"></i><span class="links_name">Manage Events</span></a></li>
+                <li><a href="#" class="active"><i class="bx bx-pie-chart-alt-2"></i><span class="links_name">Payments</span></a></li>
+                <!-- <li><a href="#"><i class="bx bx-coin-stack"></i><span class="links_name"></span></a></li> -->
+                <li><a href="#"><i class="bx bx-book-alt"></i><span class="links_name">Notifications</span></a></li>
+                <!-- <li><a href="#"><i class="bx bx-user"></i><span class="links_name"> Mnage Events</span></a></li> -->
+                <li><a href="/admin/comments" class="active"><i class="bx bx-heart"></i><span class="links_name">Support center</span></a></li>
+                <li class="log_out" c   lass="active"><a href="/admin_login.html" onClick="handleLogout()"><i class="bx bx-log-out"></i><span class="links_name">Log out</span></a></li>
+            </ul>
+        </div>
+        <div id="google_translate_element"></div>
+    </div>
+
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+        }
+
+        // Handle iframe src update
+        const urlParams = new URLSearchParams(window.location.search);
+        const iframeSrc = urlParams.get('src') || "https://copilotstudio.microsoft.com/environments/Default-6b8b8296-bdff-4ad8-93ad-84bcbf3842f5/bots/cr88c_safeTravelsCopilot/webchat?__version__=2";
+        document.getElementById('myIframe').src = iframeSrc;
+    </script>
+</body>
+
+</html>

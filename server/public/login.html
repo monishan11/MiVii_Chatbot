@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../css/login.css">
+    <title>Login & Register Page</title>
+    <style>
+        #error-msg{
+            color:red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <img src="/img/logo2.png" alt="Image Description" class="center-image">
+            <h1>Welcome to the MiVii Chat Bot</h1>
+            <p>Your AI assistant for hassle-free museum ticket booking! Plan your visit with ease.</p>
+        </div>
+        <div class="right-panel">
+            <h1>Create Account</h1>
+            <span>Login with E-mail</span>
+            <form>
+                <input type="email" placeholder="Enter E-mail" id="email">
+                <input type="password" placeholder="Enter Password" id="password">
+                <!-- <button type="submit" class="sign-up-button" onclick="window.location.href='frame.html'">Sign Up</button> -->
+                <button type="submit" class="sign-up-button">Login</button>
+                <p id="error-msg"></p>
+                Don't have an account<a href="/register">signup</a>
+            </form>
+            <!-- <div class="social-icons">
+                <a href="#" class="icons"><i class='bx bxl-google'></i></a>
+            </div> -->
+        </div>
+    </div>
+</body>
+<script>
+    const email = document.querySelector("#email")
+    const password = document.querySelector("#password")
+    const errorMsg = document.querySelector("#error-msg")
+
+
+    document.querySelector("button").addEventListener("click", async (e) => {
+        e.preventDefault()
+        // console.log(name.value);
+        const resp = await fetch("/login", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email.value, password: password.value })
+        })
+        const res = await resp.json()
+        console.log(res);
+        if(resp.status !== 200){
+            errorMsg.innerHTML = res.error
+        }else{
+            errorMsg.innerHTML = ""
+            window.location.href =  "/frame"
+
+        }
+
+    })
+
+</script>
+
+</html>

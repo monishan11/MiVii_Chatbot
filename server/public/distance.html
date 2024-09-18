@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/frame.css">
+    <style>/* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+        
+        /* Form Styling */
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        
+        /* Button Styles */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .button1 {
+            background-color: #28a745;
+        }
+        
+        .button1:hover {
+            background-color: #218838;
+        }
+        
+        .button2 {
+            background-color: #17a2b8;
+        }
+        
+        .button2:hover {
+            background-color: #138496;
+        }
+        
+        /* Readonly field for distance */
+        input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            form {
+                width: 100%;
+            }
+        }
+        </style>
+    <title>Document</title>
+</head>
+<body>
+    <form onsubmit="return false;">
+        <label for="cityInput">City:</label>
+        <input type="text" id="cityInput" name="cityInput" placeholder="Choose your city or Get Location">
+
+        <button class="button1" type="button" onclick="getLocation()">Get Current Location</button>
+
+        <label for="destination">Destination:</label>
+        <input type="text" id="destination" name="destination" placeholder="Enter destination address" required>
+
+        <button class="button2" type="button" onclick="getDistance()">Get Distance</button>
+
+        <label for="distance">Distance (km):</label>
+        <input type="text" id="distance" name="distance" placeholder="Distance" readonly>
+    </form>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            const geocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+            fetch(geocodeUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const city = data.address.city || data.address.town || data.address.village;
+                    document.getElementById("cityInput").value = city;
+                })
+                .catch(error => {
+                    console.error('Error fetching the city name:', error);
+                    alert('Unable to retrieve city name.');
+                });
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+
+        function getDistance() {
+            const city = document.getElementById('cityInput').value;
+            const destination = document.getElementById('destination').value;
+
+            if (!city || !destination) {
+                alert('Please enter both city and destination.');
+                return;
+            }
+
+            const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`;
+            fetch(geocodeUrl)
+                .then(response => response.json())
+                .then(cityData => {
+                    if (cityData.length === 0) {
+                        throw new Error('City not found');
+                    }
+                    const cityLat = parseFloat(cityData[0].lat);
+                    const cityLon = parseFloat(cityData[0].lon);
+
+                    const destinationUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destination)}`;
+                    return fetch(destinationUrl)
+                        .then(response => response.json())
+                        .then(destinationData => {
+                            if (destinationData.length === 0) {
+                                throw new Error('Destination not found');
+                            }
+                            const destLat = parseFloat(destinationData[0].lat);
+                            const destLon = parseFloat(destinationData[0].lon);
+
+                            const distance = calculateDistance(cityLat, cityLon, destLat, destLon);
+                            document.getElementById('distance').value = distance.toFixed(2);
+                        });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    alert(error.message);
+                });
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of the Earth in km
+            const dLat = toRadians(lat2 - lat1);
+            const dLon = toRadians(lon2 - lon1);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function toRadians(degrees) {
+            return degrees * (Math.PI / 180);
+        }
+
+    </script>
+</body>
+</html>

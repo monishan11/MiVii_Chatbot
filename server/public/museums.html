@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museum Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search for Museums</h1>
+
+    <form id="museumSearchForm">
+        <label for="museumName">Museum Name:</label>
+        <input type="text" id="museumName" name="museumName" placeholder="Enter Museum Name">
+        <br><br>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" placeholder="Enter Location">
+        <br><br>
+
+        <label for="theme">Theme:</label>
+        <input type="text" id="theme" name="theme" placeholder="Enter Theme">
+        <br><br>
+
+        <button type="button" onclick="searchMuseums()">Search</button>
+    </form>
+
+    <h2>Search Results</h2>
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Museum Name</th>
+                <th>Location</th>
+                <th>Year of Establishment</th>
+                <th>Theme</th>
+                <th>Weekday Timings</th>
+                <th>Weekend Timings</th>
+            </tr>
+        </thead>
+        <tbody id="resultsBody">
+            <!-- Results will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+       function searchMuseums() {
+    const museumName = document.getElementById('museumName').value;
+    const location = document.getElementById('location').value;
+    const theme = document.getElementById('theme').value;
+
+    console.log(`Searching with: Museum Name: ${museumName}, Location: ${location}, Theme: ${theme}`);
+
+    const params = new URLSearchParams({
+        museumName: museumName,
+        location: location,
+        theme: theme
+    }).toString();
+
+    fetch('/search?' + params)
+        .then(response => response.json())
+        .then(data => {
+            const resultsBody = document.getElementById('resultsBody');
+            resultsBody.innerHTML = ''; // Clear previous results
+
+            data.forEach(museum => {
+                const row = `<tr>
+                                <td>${museum.museum_name}</td>
+                                <td>${museum.location}</td>
+                                <td>${museum.established}</td>
+                                <td>${museum.theme}</td>
+                                <td>${museum.timings.weekdays}</td>
+                                <td>${museum.timings.weekends}</td>
+                            </tr>`;
+                resultsBody.innerHTML += row;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+    </script>
+</body>
+</html>

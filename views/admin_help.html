@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Comments View</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Comments</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Comments</th>
+                    <th>Date</th>
+                    <th>Generate Response</th>
+                </tr>
+            </thead>
+            <tbody id="comments-table">
+                <!-- Comments will be dynamically inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fetch comments from the backend API
+        fetch('/admin/comments')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Received data:', data); // Debugging line to show the data received
+
+                const tableBody = document.getElementById('comments-table');
+
+                // Ensure data is an array
+                if (Array.isArray(data)) {
+                    data.forEach(comment => {
+                        const row = document.createElement('tr');
+                        const formattedDate = new Date(comment.date).toLocaleString(); // Format date
+
+                        // Create row with data and Generate Response button
+                        row.innerHTML = `
+                            <td>${comment.email}</td>
+                            <td>${comment.comment}</td>
+                            <td>${formattedDate}</td>
+                            <td>
+                                <button onclick="generateResponse('${comment.email}', '${comment.comment}')">Generate Response</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    console.error('Expected an array but got:', data);
+                }
+            })
+            .catch(error => console.error('Error fetching comments:', error));
+
+        // Function to generate response email
+        function generateResponse(email, comment) {
+            const subject = encodeURIComponent('Response to your comment');
+            const body = encodeURIComponent(`Dear User,\n\nThank you for your comment: "${comment}".\n\nHere is our response...\n\nBest regards,\nAdmin`);
+            const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+            window.location.href = mailtoLink;
+        }
+    </script>
+</body>
+</html>

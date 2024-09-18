@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manage Museums</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {    
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1><center>Manage Museums</center></h1>
+
+    <h2>Add New Museum</h2>
+    <form id="addMuseumForm">
+        <label for="museumName">Museum Name:</label>
+        <input type="text" id="museumName" name="museum_name" required>
+        <br><br>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required>
+        <br><br>
+
+        <label for="established">Year of Establishment:</label>
+        <input type="text" id="established" name="established" required>
+        <br><br>
+
+        <label for="theme">Theme:</label>
+        <input type="text" id="theme" name="theme" required>
+        <br><br>
+
+        <label for="weekdayTimings">Weekday Timings:</label>
+        <input type="text" id="weekdayTimings" name="weekdays" required>
+        <br><br>
+
+        <label for="weekendTimings">Weekend Timings:</label>
+        <input type="text" id="weekendTimings" name="weekends" required>
+        <br><br>
+
+        <button type="button" onclick="addMuseum()">Add Museum</button>
+    </form>
+
+    <h2>Manage Museums</h2>
+    <table id="museumsTable">
+        <thead>
+            <tr>
+                <th>Museum Name</th>
+                <th>Location</th>
+                <th>Year of Establishment</th>
+                <th>Theme</th>
+                <th>Weekday Timings</th>
+                <th>Weekend Timings</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="museumsBody">
+            <!-- Rows will be populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to load museums data
+        function loadMuseums() {
+            fetch('/admin/museums')
+                .then(response => response.json())
+                .then(data => {
+                    const museumsBody = document.getElementById('museumsBody');
+                    museumsBody.innerHTML = ''; // Clear previous rows
+
+                    data.forEach(museum => {
+                        const row = `<tr>
+                            <td>${museum.museum_name}</td>
+                            <td>${museum.location}</td>
+                            <td>${museum.established}</td>
+                            <td>${museum.theme}</td>
+                            <td>${museum.timings.weekdays}</td>
+                            <td>${museum.timings.weekends}</td>
+                            <td>
+                                <button onclick="editMuseum('${museum._id}')">Edit</button>
+                                <button onclick="deleteMuseum('${museum._id}')">Delete</button>
+                            </td>
+                        </tr>`;
+                        museumsBody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Function to add a new museum
+        function addMuseum() {
+            const formData = {
+                museum_name: document.getElementById('museumName').value,
+                location: document.getElementById('location').value,
+                established: document.getElementById('established').value,
+                theme: document.getElementById('theme').value,
+                timings: {
+                    weekdays: document.getElementById('weekdayTimings').value,
+                    weekends: document.getElementById('weekendTimings').value
+                }
+            };
+
+            fetch('/admin/museums', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                loadMuseums(); // Refresh the list
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Function to delete a museum
+        function deleteMuseum(id) {
+            fetch(`/admin/museums/${id}`, {
+                method: 'DELETE'
+            })
+            .then(() => {
+                loadMuseums(); // Refresh the list
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Load museums on page load
+        window.onload = loadMuseums;
+    </script>
+</body>
+</html>
