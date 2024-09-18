@@ -20,21 +20,41 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 6px double #ff4500; /* Outer double border with a bright color */
+            background-image: linear-gradient(to bottom right, #f0f8ff, #d3d3d3); /* Gradient background for the container */
         }
         .container h1 {
             margin-bottom: 20px;
+            background-image: linear-gradient(to right, #ff7f50, #1e90ff); /* Gradient for the title */
+            -webkit-background-clip: text;
+            color: transparent;
         }
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
+            background-image: linear-gradient(to right, #ff4500, #007bff); /* Gradient for labels */
+            -webkit-background-clip: text;
+            color: transparent;
         }
         input, textarea {
-            width: 100%;
+            width: 377px;
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            background-color: white;
+        }
+        .comment-box {/* Inner double border */
+            background-color: white;
+            padding:5px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            width: 400px;
+            height: 200px;
+        }
+        .comment-box input[type=text] {
+            height: 175px;
         }
         button {
             padding: 10px 20px;
@@ -57,7 +77,9 @@
             <input type="email" id="email" name="email" required>
 
             <label for="comment">Comment:</label>
-            <textarea id="comment" name="comment" rows="5" required></textarea>
+            <div class="comment-box">
+                <input type="text" name="comment">
+            </div>
 
             <button type="submit">Submit</button>
         </form>

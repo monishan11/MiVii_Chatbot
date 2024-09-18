@@ -193,7 +193,14 @@ app.get('/help.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'museums.html'));
   });
 
+  app.get('/event.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'event.html'));
+  });
 
+
+  
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 
@@ -280,4 +287,83 @@ app.delete('/admin/museums/:id', async (req, res) => {
 });
 
 
+// admin page events add 
 
+// Set up storage for multer
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)); // Append timestamp to avoid filename conflicts
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// Define Mongoose schema for events
+const eventSchema = new mongoose.Schema({
+    museumName: String,
+    location: String,
+    description: String,
+    imageUrl: String
+});
+
+const Event = mongoose.model('Event', eventSchema);
+
+// API to handle file upload and store event data
+app.post('/api/events', upload.single('image'), async (req, res) => {
+    try {
+        const { museumName, location, description } = req.body;
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+
+        const event = new Event({
+            museumName,
+            location,
+            description,
+            imageUrl
+        });
+
+        await event.save();
+        res.status(201).json(event);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to save event' });
+    }
+});
+
+// API to serve images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// API to get all events
+app.get('/api/events', async (req, res) => {
+    try {
+        const events = await Event.find();
+        res.json(events);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to retrieve events' });
+    }
+});
+
+// API to delete an event
+app.delete('/api/events/:id', async (req, res) => {
+    try {
+        const eventId = req.params.id;
+
+        // Check if the provided ID is a valid MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(eventId)) {
+            return res.status(400).json({ error: 'Invalid event ID' });
+        }
+
+        // Try to find and delete the event by ID
+        const deletedEvent = await Event.findByIdAndDelete(eventId);
+
+        if (!deletedEvent) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        res.json({ message: 'Event deleted successfully' });
+    } catch (err) {
+        console.error(err);  // Log the error to debug
+        res.status(500).json({ error: 'Failed to delete event' });
+    }
+});

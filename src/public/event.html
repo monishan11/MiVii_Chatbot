@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museum Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .event-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .event-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+        }
+        .event-card p {
+            margin: 5px 0;
+        }
+        .event-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Museum Events</h1>
+
+        <div id="eventsContainer">
+            <!-- Events will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        function loadEvents() {
+            fetch('/api/events')
+                .then(response => response.json())
+                .then(data => {
+                    //const imageUrl = `/uploads/${event.imageFilename}`;
+
+                    const eventsContainer = document.getElementById('eventsContainer');
+                    eventsContainer.innerHTML = ''; // Clear previous results
+
+                    data.forEach(event => {
+                        const eventCard = `
+                            <div class="event-card">
+                                <h2>${event.museumName}</h2>
+                                <p><strong>Location:</strong> ${event.location}</p>
+                                <p>${event.description}</p>
+                                <img src="${event.imageUrl}" alt="${event.museumName}" class="event-image">
+                            </div>`;
+                        eventsContainer.innerHTML += eventCard;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Load events on page load
+        window.onload = loadEvents;
+    </script>
+</body>
+</html>

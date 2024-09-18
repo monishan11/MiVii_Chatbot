@@ -144,18 +144,17 @@
                 });
         }
 
+
+        // Function to delete a event
         function deleteEvent(id) {
             fetch(`/api/events/${id}`, {
                 method: 'DELETE'
             })
-            .then(response => response.json())
-            .then(data => {
+            .then(data  => {
                 console.log('Deleted:', data);
-                loadEvents(); // Reload events after deletion
+                loadMuseums(); // Refresh the list
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            .catch(error => console.error('Error:', error));
         }
 
         // Load events on page load
