@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Options</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* styles.css */
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 1000px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 30px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 30px;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .payment-category {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+
+        .payment-category h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .payment-method {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .payment-method:hover {
+            background-color: #e0e0e0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .payment-method img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .payment-method p {
+            margin: 0;
+            color: #555;
+            font-size: 25px;
+        }
+
+        .payment-method p:last-child {
+            font-weight: bold;
+        }
+        
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Payment Method</h1>
+        <div class="payment-options">
+            <div class="payment-category">
+                <h2>Credit/Debit Cards</h2>
+                <div class="payment-method">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa">
+                    <p>Visa</p>
+                </div>
+                <div class="payment-method">
+                    <img src="https://download.logo.wine/logo/Mastercard/Mastercard-Logo.wine.png" alt="MasterCard">
+                    <p>MasterCard</p>
+                </div>
+                <div class="payment-method">
+                    <img src="https://w7.pngwing.com/pngs/175/377/png-transparent-american-express-text-on-blue-blue-background-american-express-credit-card-payment-card-logo-american-express-logo-blue-text-service-thumbnail.png" alt="American Express">
+                    <p>American Express</p>
+                </div>
+            </div>
+
+            <div class="payment-category">
+                <h2>UPI</h2>
+                <div class="payment-method">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyVO9LUWF81Ov6LZR50eDNu5rNFCpkn0LwYQ&s" alt="Google Pay">
+                    <p>Google Pay</p>
+                </div>
+                <div class="payment-method">
+                    <img src="https://w7.pngwing.com/pngs/305/719/png-transparent-paytm-ecommerce-shopping-social-icons-circular-color-icon-thumbnail.png" alt="Paytm">
+                    <p>Paytm</p>
+                </div>
+                <div class="payment-method">
+                    <img src="https://e7.pngegg.com/pngimages/332/615/png-clipart-phonepe-india-unified-payments-interface-india-purple-violet-thumbnail.png" alt="PhonePe">
+                    <p>PhonePe</p>
+                </div>
+            </div>
+
+            <div class="payment-category">
+                <h2>Net Banking</h2>
+                <div class="payment-method">
+                    <img src="https://play-lh.googleusercontent.com/aG2nPkzRR_nfxXnema47yxWwBapSB913EbNT14-1GtIA3pF5FzwEt_Hg4mbHskT-ioY" alt="Neytbanking">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_25OTPJxLpcKOF_jn42t5ipt8PfKtfBICwA&s" alt="">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/SBI-logo.svg/800px-SBI-logo.svg.png" alt="NetBanking">
+                    <p>Choose your preferred bank for net banking.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

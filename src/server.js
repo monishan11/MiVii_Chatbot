@@ -6,6 +6,7 @@ const multer = require('multer');
 const fs = require('fs');
 const User = require('../models/user'); // Import User model
 // const User = require('../models/comment'); // Import Comment model
+const Stripe = require('stripe');
 const path = require("path")
 const app = express();
 const port = 3000;
@@ -196,6 +197,11 @@ app.get('/help.html', (req, res) => {
   app.get('/event.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'event.html'));
   });
+
+  app.get('/payment.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'payment.html'));
+  });
+
 
 
   
