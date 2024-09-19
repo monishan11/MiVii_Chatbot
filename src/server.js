@@ -385,48 +385,45 @@ app.delete('/api/events/:id', async (req, res) => {
 // Storing chatbot data 
 
 
-// Create a Mongoose schema and model
+// Define Mongoose schema
 const bookingSchema = new mongoose.Schema({
+    name: String,
     age: Number,
     city: String,
+    museumname: String,
     date: String,
-    museumName: String,
-    name: String,
+    time: String,
     noOfAdult: Number,
-    noOfChild: Number,
-    time: String
-});
-
-const Booking = mongoose.model('Booking', bookingSchema);
-
-// POST route to handle the request
-app.post('/submit-booking', async (req, res) => {
-    try {
-        const {
-            age, city, date, museumname, name, noOfAdult, noOfChild, time
-        } = req.body;
-
-        // Create a new booking record
-        const newBooking = new Booking({
-            age,
-            city,
-            date,
-            museumName: museumname,
-            name,
-            noOfAdult,
-            noOfChild,
-            time
-        });
-
-          // Save to MongoDB
-          await newBooking.save();
-
-          // Send success response
-          res.status(200).json({ message: 'Booking successfully saved!', booking: newBooking });
-      } catch (error) {
-          console.error('Error saving booking:', error);
-          res.status(500).json({ error: 'Failed to save booking' });
-      }
+    noOfChild: Number
   });
-  
-  
+   
+  const Booking = mongoose.model('Booking', bookingSchema);
+   
+  // Handle POST request to /submit-booking
+  app.post('/submit-booking', async (req, res) => {
+    try {
+      const { name, age, city, date, museumname, noOfAdult, noOfChild, time } = req.body;
+   
+      // Create a new booking document
+      const newBooking = new Booking({
+        name,
+        age,
+        city,
+        museumname,
+        date,
+        time,
+        noOfAdult,
+        noOfChild
+      });
+   
+      // Save the booking to the database
+      await newBooking.save();
+   
+      // Send a success response
+      res.status(201).json({ message: 'Booking submitted successfully!' });
+    } catch (error) {
+      console.error('Error processing booking:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+   
