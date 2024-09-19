@@ -385,16 +385,15 @@ app.delete('/api/events/:id', async (req, res) => {
 // Storing chatbot data 
 
 
-// Define Mongoose schema
 const bookingSchema = new mongoose.Schema({
     name: String,
     age: Number,
     city: String,
-    museumname: String,
     date: String,
-    time: String,
+    museumname: String,
     noOfAdult: Number,
-    noOfChild: Number
+    noOfChild: Number,
+    time: String
   });
    
   const Booking = mongoose.model('Booking', bookingSchema);
@@ -409,21 +408,25 @@ const bookingSchema = new mongoose.Schema({
         name,
         age,
         city,
-        museumname,
         date,
-        time,
+        museumname,
         noOfAdult,
-        noOfChild
+        noOfChild,
+        time
       });
    
       // Save the booking to the database
       await newBooking.save();
    
-      // Send a success response
-      res.status(201).json({ message: 'Booking submitted successfully!' });
+      // Send a success response with a boolean value
+      res.status(201).json({ success: true });
     } catch (error) {
       console.error('Error processing booking:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+   
+      // Send an error response with a boolean value
+      res.status(500).json({ success: false });
     }
   });
+  
+
    
