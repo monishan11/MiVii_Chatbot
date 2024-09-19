@@ -47,16 +47,25 @@
     </div>
 
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    <script>
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
-        }
+<script>
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    }
 
-        // Handle iframe src update
-        const urlParams = new URLSearchParams(window.location.search);
-        const iframeSrc = urlParams.get('src') || "https://copilotstudio.microsoft.com/environments/Default-6b8b8296-bdff-4ad8-93ad-84bcbf3842f5/bots/cr88c_safeTravelsCopilot/webchat?_version_=2";
-        document.getElementById('myIframe').src = iframeSrc;
-    </script>
+    // Handle iframe src update
+    const urlParams = new URLSearchParams(window.location.search);
+    const iframeSrc = urlParams.get('src') || "https://copilotstudio.microsoft.com/environments/Default-6b8b8296-bdff-4ad8-93ad-84bcbf3842f5/bots/cr88c_safeTravelsCopilot/webchat?_version_=2";
+    const iframeElement = document.getElementById('myIframe');
+    iframeElement.src = iframeSrc;
+
+    // Refresh iframe when the page is reloaded
+    window.onbeforeunload = function () {
+        iframeElement.contentWindow.location.reload(true);
+    };
+</script>
+
+
+
 </body>
 
 </html>
